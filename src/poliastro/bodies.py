@@ -28,6 +28,7 @@ and a way to define new bodies (:py:class:`~Body` class).
 
 Data references can be found in :py:mod:`~poliastro.constants`
 """
+
 from collections import namedtuple
 import math
 
@@ -63,6 +64,8 @@ class Body(
             "J3",
             "mass",
             "mean_a",
+            "id",
+            "weight",
         ],
     )
 ):
@@ -82,6 +85,8 @@ class Body(
         J3=0.0 * u.one,
         mass=None,
         mean_a=0.0 * u.km,
+        id=None,
+        weight=None,
     ):
         if mass is None:
             mass = k / G
@@ -100,6 +105,8 @@ class Body(
             _q(J3),
             _q(mass),
             _q(mean_a),
+            id,
+            weight,
         )
 
     @property
@@ -121,9 +128,7 @@ class Body(
         return cls(parent, k, name, symbol, R, **kwargs)
 
     @classmethod
-    def from_relative(
-        cls, reference, parent, k, name, symbol=None, R=0, **kwargs
-    ):
+    def from_relative(cls, reference, parent, k, name, symbol=None, R=0, **kwargs):
         k = k * reference.k
         R = R * reference.R
         return cls(parent, k, name, symbol, R, **kwargs)
@@ -155,9 +160,7 @@ class SolarSystemPlanet(Body):
         # between bodies.py and misc.py
         from poliastro.plotting.orbit.plotter import OrbitPlotter
 
-        return OrbitPlotter(backend=backend, plane=plane).plot_body_orbit(
-            self, epoch=epoch, label=label
-        )
+        return OrbitPlotter(backend=backend, plane=plane).plot_body_orbit(self, epoch=epoch, label=label)
 
 
 Sun = Body(
@@ -176,7 +179,7 @@ Mercury = SolarSystemPlanet(
     parent=Sun,
     k=constants.GM_mercury,
     name="Mercury",
-    symbol="\u263F",
+    symbol="\u263f",
     R=constants.R_mercury,
     R_mean=constants.R_mean_mercury,
     R_polar=constants.R_polar_mercury,
@@ -262,7 +265,7 @@ Uranus = SolarSystemPlanet(
     parent=Sun,
     k=constants.GM_uranus,
     name="Uranus",
-    symbol="\u26E2",
+    symbol="\u26e2",
     R=constants.R_uranus,
     R_mean=constants.R_mean_uranus,
     R_polar=constants.R_polar_uranus,
@@ -300,7 +303,7 @@ Moon = Body(
     parent=Earth,
     k=constants.GM_moon,
     name="Moon",
-    symbol="\u263E",
+    symbol="\u263e",
     R=constants.R_moon,
     R_mean=constants.R_mean_moon,
     R_polar=constants.R_polar_moon,
@@ -370,4 +373,127 @@ Charon = Body(
     k=constants.GM_charon,
     name="charon",
     mean_a=constants.mean_a_charon,
+)
+
+
+####################### GTOC #########################
+
+Altaira = Body(
+    parent=None,
+    k=139348062043.343 * u.km**3 / u.s**2,
+    name="Altaira",
+    symbol="Altaira",
+    R=constants.R_sun,
+    rotational_period=constants.rotational_period_sun,
+    mass=139348062043.343 / G * u.kg,
+)
+
+Vulcan = Body(
+    parent=Altaira,
+    k=658906373.3 * u.km**3 / u.s**2,
+    name="Vulcan",
+    R=133020.7 * u.km,
+    id=1,
+    weight=0.1,
+)
+
+
+# Planet 2: Yavin
+Yavin = Body(
+    parent=Altaira,
+    k=6363037.484 * u.km**3 / u.s**2,
+    name="Yavin",
+    R=18013.2 * u.km,
+    id=2,
+    weight=1,
+)
+
+# Planet 3: Eden
+Eden = Body(
+    parent=Altaira,
+    k=443853.559 * u.km**3 / u.s**2,
+    name="Eden",
+    R=6697.4 * u.km,
+    id=3,
+    weight=2,
+)
+
+# Planet 4: Hoth
+Hoth = Body(
+    parent=Altaira,
+    k=284441.708 * u.km**3 / u.s**2,
+    name="Hoth",
+    R=5498.8 * u.km,
+    id=4,
+    weight=3,
+)
+
+# Planet 1000: Yandi
+Yandi = Body(
+    parent=Altaira,
+    k=0 * u.km**3 / u.s**2,
+    name="Yandi",
+    R=0 * u.km,
+    id=1000,
+    weight=5,
+)
+
+# Planet 5: Beyonce
+Beyonce = Body(
+    parent=Altaira,
+    k=49322760.29 * u.km**3 / u.s**2,
+    name="Beyonce",
+    R=63476.2 * u.km,
+    id=5,
+    weight=7,
+)
+
+# Planet 6: Bespin
+Bespin = Body(
+    parent=Altaira,
+    k=120377125.9 * u.km**3 / u.s**2,
+    name="Bespin",
+    R=63661.4 * u.km,
+    id=6,
+    weight=10,
+)
+
+# Planet 7: Jotunn
+Jotunn = Body(
+    parent=Altaira,
+    k=6341816.256 * u.km**3 / u.s**2,
+    name="Jotunn",
+    R=23865.3 * u.km,
+    id=7,
+    weight=15,
+)
+
+# Planet 8: Wakonyingo
+Wakonyingo = Body(
+    parent=Altaira,
+    k=6598433.391 * u.km**3 / u.s**2,
+    name="Wakonyingo",
+    R=13531.4 * u.km,
+    id=8,
+    weight=20,
+)
+
+# Planet 9: Rogue1
+Rogue1 = Body(
+    parent=Altaira,
+    k=66346648.14 * u.km**3 / u.s**2,
+    name="Rogue1",
+    R=109471.2 * u.km,
+    id=9,
+    weight=35,
+)
+
+# Planet 10: Proxima
+PlanetX = Body(
+    parent=Altaira,
+    k=3411912.397 * u.km**3 / u.s**2,
+    name="PlanetX",
+    R=12993.8 * u.km,
+    id=10,
+    weight=50,
 )
